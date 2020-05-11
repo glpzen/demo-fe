@@ -6,6 +6,7 @@ Vue.use(VueRouter);
 
 import Dashboard from "./components/Dashboard";
 import Guardian from "./components/guardian/Guardian";
+import GuardianUpdate from "./components/guardian/GuardianUpdate";
 import Student from "./components/student/Student";
 import Register from "./components/auth/Register";
 import Login from "./components/auth/Login";
@@ -23,6 +24,11 @@ export const router = new VueRouter({
             path: '/guardians',
             name: 'guardians',
             component: Guardian
+        },
+        {
+            path: '/guardians/:id/edit',
+            name: 'guardians.update',
+            component: GuardianUpdate
         },
         {
             path: '/students',

@@ -27,6 +27,9 @@
                     <v-spacer></v-spacer>
                 </v-toolbar>
             </template>
+            <template v-slot:item.id="{ item }">
+                <v-chip small color="red" dark @click="update(item)">Update Guardian</v-chip>
+            </template>
 
             <template v-slot:expanded-item="{ item }">
                 <td :colspan="headers.length">
@@ -67,6 +70,7 @@
                     { text: 'Surname', value: 'surname' },
                     { text: 'Email', value: 'email' },
                     { text: 'Created', value: 'created_at' },
+                    { text: 'Actions', value: 'id' },
                 ]
             }
         },
@@ -74,7 +78,10 @@
             ...mapGetters(['getGuardians'])
         },
         methods: {
-            ...mapActions(['setGuardians'])
+            ...mapActions(['setGuardians']),
+            update(item){
+                this.$router.push(`/guardians/${item.id}/edit`);
+            }
         },
         created(){
             this.setGuardians();

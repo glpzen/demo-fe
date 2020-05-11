@@ -2,8 +2,7 @@
     <div>
         <div class="row">
             <div class="col-4">
-                <h1>Guardian Register Form</h1>
-                <router-link to="/login">Sign In</router-link>
+                <h1>Guardian Update Form</h1>
             </div>
         </div>
         <div class="row">
@@ -25,11 +24,7 @@
                         <label for="password">Password</label>
                         <input type="password" class="form-control" id="password" v-model="password" placeholder="Password ">
                     </div>
-                    <div class="form-group">
-                        <label for="access_code">Access Code</label>
-                        <input type="text" class="form-control" id="access_code" v-model="access_code" placeholder="Code">
-                    </div>
-                    <button @click="register()" class="btn btn-primary">Sign Up</button>
+                    <button @click="update()" class="btn btn-primary">Update</button>
                 </form>
             </div>
         </div>
@@ -39,8 +34,9 @@
 
 <script>
     import axios from "axios";
+    import {mapGetters, mapActions} from "vuex";
     export default {
-        name: 'Register',
+        name: 'GuardianUpdate',
         data: function () {
             return {
                 name: null,
@@ -50,28 +46,38 @@
                 access_code: null
             }
         },
+        computed: {
+            ...mapGetters(['getGuardian'])
+        },
         methods: {
-            async register(){
+            ...mapActions(['setGuardian']),
+            async update(){
 
                 let payload = {
                     name: this.name,
                     surname: this.surname,
                     email: this.email,
-                    password: this.password,
-                    access_code: this.access_code
+                    password: this.password
                 };
 
-                let response = await axios.post("/guardians", payload);
+                let response = await axios.patch(`/guardians/${this.$route.params.id}`, payload);
                 console.log(response);
-                if(201 === response.status){
-                    alert("User has been registered.")
-                    this.$router.push("/login");
+                if(204 === response.status){
+                    alert("User has been updated.");
+                    this.$router.push("/guardians");
                 }else{
                     for (const [key] of Object.entries(response.data.errors)) {
                         alert(response.data.errors[key]);
                     }
                 }
             }
+        },
+        created() {
+            this.setGuardian(this.$route.params.id).then(() => {
+                this.name = this.getGuardian.name;
+                this.surname = this.getGuardian.surname;
+                this.email = this.getGuardian.email;
+            });
         }
 
     }
